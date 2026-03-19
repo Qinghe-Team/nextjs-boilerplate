@@ -29,7 +29,7 @@ function Main()
               href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               className="font-medium text-zinc-950 dark:text-zinc-50"
             >
-              Learning
+              学习
             </a>{" "}
             center.
           </p>
