@@ -29,7 +29,7 @@ function Main()
               href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               className="font-medium text-zinc-950 dark:text-zinc-50"
             >
-              学习
+              Learning
             </a>{" "}
             center.
           </p>
@@ -66,6 +66,7 @@ function Main()
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <Main/>
       <Main/>
     </div>
   );
