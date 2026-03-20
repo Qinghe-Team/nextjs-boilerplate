@@ -1,4 +1,3 @@
-// app/layout.tsx
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -19,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body className={inter.className}>
-        <Header /> {/* 在这里使用头部组件 */}
+        <Header />
         <main className="min-h-screen">
           {children}
         </main>

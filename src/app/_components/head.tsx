@@ -11,16 +11,6 @@ export default function Header() {
         {/* 左侧：Logo 区域 */}
         <div className="flex-shrink-0 flex items-center">
           <Link href="/" className="flex items-center gap-2">
-            {/* 使用 next/image 加载 public/logo.svg */}
-            {/* 确保你的项目 public 文件夹下有 logo.svg (Next.js 模板自带) */}
-            <div className="relative h-8 w-8">
-              <Image
-                src="/logo.svg"
-                alt="NextTest Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
             <span className="font-bold text-xl text-gray-900 tracking-tight">
               NextTest
             </span>
