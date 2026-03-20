@@ -1,11 +1,8 @@
-type Props = {
-  params: {
-    user_id: string;
-  };
-};
-
-export default function UserProfile({ params }: Props) {
-  const { user_id } = params;
+// 1. 添加 async 关键字
+export default async function UserProfile(props: Props) {
+  // 2. 使用 await 获取 params
+  const params = await props.params;
+  const user_id = params.user_id;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -33,8 +30,11 @@ export default function UserProfile({ params }: Props) {
         </h1>
         
         <div className="bg-gray-100 rounded-lg p-4 mt-4">
-          <p className="text-sm text-gray-500 mb-1">{user_id}</p>
-          
+          <p className="text-sm text-gray-500 mb-1">User ID</p>
+          <p className="text-xl font-mono font-semibold text-blue-600">
+            {/* 显示 user_id */}
+            {user_id}
+          </p>
         </div>
 
         <div className="mt-6 flex gap-3 justify-center">
@@ -49,3 +49,10 @@ export default function UserProfile({ params }: Props) {
     </div>
   );
 }
+
+// 确保 Props 类型定义正确
+type Props = {
+  params: Promise<{
+    user_id: string;
+  }>;
+};
