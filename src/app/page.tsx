@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "./_components/Button";
+import Button from "./_components/button";
 function Main()
 {
   return (
