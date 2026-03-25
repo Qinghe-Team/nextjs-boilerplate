@@ -2,6 +2,7 @@ import { prisma } from "@/src/lib/db";
 import { notFound } from "next/navigation";
 import { marked } from "marked";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function BlogPostPage({
   params,
@@ -53,11 +54,14 @@ export default async function BlogPostPage({
 
       {/* Cover Image */}
       {post.coverImage && (
-        <div className="aspect-video rounded-xl overflow-hidden mb-8 bg-muted">
-          <img
+        <div className="aspect-video rounded-xl overflow-hidden mb-8 bg-muted relative">
+          <Image
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+            priority
           />
         </div>
       )}

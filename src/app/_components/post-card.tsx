@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface PostCardProps {
   title: string;
@@ -28,11 +29,13 @@ export default function PostCard({
       <article className="bg-card rounded-xl shadow-sm border border-border hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
         {/* Cover Image */}
         {coverImage && (
-          <div className="aspect-video overflow-hidden bg-muted">
-            <img
+          <div className="aspect-video overflow-hidden bg-muted relative">
+            <Image
               src={coverImage}
               alt={title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           </div>
         )}
