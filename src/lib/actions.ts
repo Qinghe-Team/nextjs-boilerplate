@@ -46,12 +46,27 @@ export async function logoutAction() {
 
 // ========== Post Actions ==========
 
-function generateSlug(title: string): string {
-  return title
+function toSlug(text: string): string {
+  return text
     .toLowerCase()
     .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
-    .replace(/^-|-$/g, "")
-    || `post-${Date.now()}`;
+    .replace(/^-|-$/g, "");
+}
+
+async function upsertTagsForPost(postId: number, tagsStr: string) {
+  if (!tagsStr.trim()) return;
+  const tagNames = tagsStr.split(",").map((t) => t.trim()).filter(Boolean);
+  for (const tagName of tagNames) {
+    const tagSlug = toSlug(tagName) || `tag-${Date.now()}`;
+    const tag = await prisma.tag.upsert({
+      where: { name: tagName },
+      create: { name: tagName, slug: tagSlug },
+      update: {},
+    });
+    await prisma.tagOnPost.create({
+      data: { postId, tagId: tag.id },
+    });
+  }
 }
 
 export async function createPostAction(formData: FormData) {
@@ -69,7 +84,7 @@ export async function createPostAction(formData: FormData) {
     return { error: "标题和内容不能为空" };
   }
 
-  const slug = generateSlug(title) + "-" + Date.now().toString(36);
+  const slug = (toSlug(title) || "post") + "-" + Date.now().toString(36);
 
   const post = await prisma.post.create({
     data: {
@@ -84,20 +99,7 @@ export async function createPostAction(formData: FormData) {
   });
 
   // Handle tags
-  if (tagsStr.trim()) {
-    const tagNames = tagsStr.split(",").map((t) => t.trim()).filter(Boolean);
-    for (const tagName of tagNames) {
-      const tagSlug = tagName.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-").replace(/^-|-$/g, "");
-      const tag = await prisma.tag.upsert({
-        where: { name: tagName },
-        create: { name: tagName, slug: tagSlug || `tag-${Date.now()}` },
-        update: {},
-      });
-      await prisma.tagOnPost.create({
-        data: { postId: post.id, tagId: tag.id },
-      });
-    }
-  }
+  await upsertTagsForPost(post.id, tagsStr);
 
   redirect("/admin/posts");
 }
@@ -132,20 +134,7 @@ export async function updatePostAction(formData: FormData) {
 
   // Update tags
   await prisma.tagOnPost.deleteMany({ where: { postId: id } });
-  if (tagsStr.trim()) {
-    const tagNames = tagsStr.split(",").map((t) => t.trim()).filter(Boolean);
-    for (const tagName of tagNames) {
-      const tagSlug = tagName.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-").replace(/^-|-$/g, "");
-      const tag = await prisma.tag.upsert({
-        where: { name: tagName },
-        create: { name: tagName, slug: tagSlug || `tag-${Date.now()}` },
-        update: {},
-      });
-      await prisma.tagOnPost.create({
-        data: { postId: id, tagId: tag.id },
-      });
-    }
-  }
+  await upsertTagsForPost(id, tagsStr);
 
   redirect("/admin/posts");
 }
@@ -182,7 +171,7 @@ export async function createCategoryAction(formData: FormData) {
   const name = formData.get("name") as string;
   if (!name) return { error: "分类名不能为空" };
 
-  const slug = name.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-").replace(/^-|-$/g, "") || `cat-${Date.now()}`;
+  const slug = toSlug(name) || `cat-${Date.now()}`;
 
   await prisma.category.create({ data: { name, slug } });
   redirect("/admin/categories");
@@ -205,6 +194,10 @@ export async function deleteCategoryAction(formData: FormData) {
 // ========== Seed Action ==========
 
 export async function seedAction() {
+  if (process.env.NODE_ENV === "production") {
+    return { error: "生产环境禁止初始化示例数据" };
+  }
+
   const userCount = await prisma.user.count();
   if (userCount > 0) {
     return { error: "数据已存在，无需重复初始化" };
