@@ -1,0 +1,62 @@
+// Blog Database Schema
+// Default: SQLite for local development
+// For Vercel/production: Switch to MySQL by changing provider to "mysql"
+// and updating DATABASE_URL in .env
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  // For MySQL, change above to: provider = "mysql"
+  // And set DATABASE_URL to: mysql://USER:PASSWORD@HOST:PORT/DATABASE
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id         Int       @id @default(autoincrement())
+  title      String
+  slug       String    @unique
+  content    String
+  excerpt    String    @default("")
+  coverImage String    @default("")
+  published  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  tags       TagOnPost[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+model Tag {
+  id    Int         @id @default(autoincrement())
+  name  String      @unique
+  slug  String      @unique
+  posts TagOnPost[]
+}
+
+model TagOnPost {
+  postId Int
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
