@@ -89,11 +89,13 @@ export default async function HomePage() {
           ) : (
             <div className="text-center py-12 bg-card rounded-xl border border-border">
               <p className="text-muted-foreground">
-                还没有文章，请先
-                <Link href="/api/seed" className="text-primary hover:underline mx-1">
-                  初始化数据
+                还没有文章。请访问{" "}
+                <code className="text-xs bg-muted px-1.5 py-0.5 rounded">/api/seed</code>{" "}
+                初始化示例数据，或在
+                <Link href="/admin" className="text-primary hover:underline mx-1">
+                  管理后台
                 </Link>
-                。
+                创建文章。
               </p>
             </div>
           )}
