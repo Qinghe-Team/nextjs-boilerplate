@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   // For MySQL, change above to: provider = "mysql"
   // And set DATABASE_URL to: mysql://USER:PASSWORD@HOST:PORT/DATABASE
 }
