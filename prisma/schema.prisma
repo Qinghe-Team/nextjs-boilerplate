@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  // For MySQL, change above to: provider = "mysql"
+  // For MySQL, change above to: provider = "mysql" nznz
   // And set DATABASE_URL to: mysql://USER:PASSWORD@HOST:PORT/DATABASE
 }
 
