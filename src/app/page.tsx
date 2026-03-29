@@ -134,7 +134,7 @@ export default async function HomePage() {
       <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold text-foreground mb-4">
-            开始管理你的博客
+            开始管理你的博客吧
           </h2>
           <p className="text-muted-foreground mb-6">
             登录管理后台，创建和管理你的文章。
